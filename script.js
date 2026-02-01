@@ -1,3 +1,14 @@
+function convertFRtoEN(card) {
+  const map = { c: "h", p: "s", k: "d", t: "c" };
+  let r = card[0].toUpperCase();
+  let s = card[1].toLowerCase();
+  return r + (map[s] || s);
+}
+
+function parseHandFR(str) {
+  return str.trim().split(" ").map(c => convertFRtoEN(c));
+}
+
 function showTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
   document.getElementById(tab).classList.remove('hidden');
