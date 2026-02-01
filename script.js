@@ -20,9 +20,8 @@ const ranks = "23456789TJQKA";
 const suits = "SHDC";
 
 function parseHand(str) {
-  return str.trim().split(" ");
+  return parseHandFR(str);
 }
-
 function expandRange(range) {
   if (!range.includes("+")) return [range];
 
