@@ -1,128 +1,75 @@
-function showTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
-  document.getElementById(tab).classList.remove('hidden');
+const ranks = ["A","K","Q","J","T","9","8","7","6","5","4","3","2"];
+const grid = document.getElementById("grid");
+const rangesDiv = document.getElementById("ranges");
+
+let heroRange = new Set();
+let villainRange = new Set();
+let mode = "hero";
+
+function setMode(m) {
+  mode = m;
+  document.getElementById("heroBtn").classList.remove("active");
+  document.getElementById("villainBtn").classList.remove("active");
+
+  if (m === "hero") document.getElementById("heroBtn").classList.add("active");
+  else document.getElementById("villainBtn").classList.add("active");
 }
 
-// ===== RANGE ENGINE =====
+function buildGrid() {
+  for (let r = 0; r < 13; r++) {
+    for (let c = 0; c < 13; c++) {
+      let hand;
+      if (r === c) hand = ranks[r] + ranks[c];
+      else if (r < c) hand = ranks[r] + ranks[c] + "s";
+      else hand = ranks[c] + ranks[r] + "o";
 
-const ranks = "23456789TJQKA";
-const suits = "SHDC";
+      const div = document.createElement("div");
+      div.className = "cell";
+      div.innerText = hand;
+      div.dataset.hand = hand;
+      div.onclick = () => toggleHand(div, hand);
 
-function parseHand(str) {
-  return str.trim().split(" ");
-}
-
-function expandRange(range) {
-  if (!range.includes("+")) return [range];
-
-  let res = [];
-  let base = range.replace("+", "");
-
-  if (base.length === 2) {
-    let start = ranks.indexOf(base[0]);
-    for (let i = start; i < ranks.length; i++) {
-      res.push(ranks[i] + ranks[i]);
+      grid.appendChild(div);
     }
   }
-
-  return res;
 }
 
-// ===== RANDOM CARD =====
-
-function randomCard(exclude) {
-  let card;
-  do {
-    card = ranks[Math.floor(Math.random()*13)] + suits[Math.floor(Math.random()*4)];
-  } while (exclude.includes(card));
-  return card;
-}
-
-// ===== EQUITY MAIN vs RANGE =====
-
-function calculateRange() {
-  const hero = parseHand(document.getElementById("hero").value.toUpperCase());
-  const villainRange = document.getElementById("villain").value.split(",");
-  const board = document.getElementById("board").value ? parseHand(document.getElementById("board").value.toUpperCase()) : [];
-
-  let heroWins = 0, villainWins = 0, ties = 0;
-  let total = 0;
-
-  villainRange.forEach(r => {
-    expandRange(r.trim()).forEach(hand => {
-      simulate(hero, hand, board, 2000, res => {
-        heroWins += res.h;
-        villainWins += res.v;
-        ties += res.t;
-        total += res.total;
-      });
-    });
-  });
-
-  setTimeout(() => {
-    document.getElementById("result").innerHTML =
-      `Hero : ${(heroWins/total*100).toFixed(2)}%<br>
-       Vilain : ${(villainWins/total*100).toFixed(2)}%`;
-  }, 100);
-}
-
-function simulate(hero, villainHand, board, iter, cb) {
-  let h=0,v=0,t=0;
-
-  for(let i=0;i<iter;i++){
-    let used=[...hero,...board];
-    let v=[villainHand[0]+villainHand[0], villainHand[1]+villainHand[1]];
-    let run=[...board];
-
-    while(run.length<5){
-      let c=randomCard(used);
-      used.push(c); run.push(c);
-    }
-
-    let hh=Hand.solve([...hero,...run]);
-    let vv=Hand.solve([...v,...run]);
-    let w=Hand.winners([hh,vv]);
-
-    if(w.length===2) t++;
-    else if(w[0]===hh) h++;
-    else v++;
+function toggleHand(div, hand) {
+  if (mode === "hero") {
+    if (heroRange.has(hand)) heroRange.delete(hand);
+    else heroRange.add(hand);
   }
 
-  cb({h,v,t,total:iter});
+  if (mode === "villain") {
+    if (villainRange.has(hand)) villainRange.delete(hand);
+    else villainRange.add(hand);
+  }
+
+  updateCell(div, hand);
+  updateTextRanges();
 }
 
-// ===== PUSH FOLD =====
+function updateCell(div, hand) {
+  const h = heroRange.has(hand);
+  const v = villainRange.has(hand);
 
-function pushFold() {
-  const stack = parseFloat(document.getElementById("stack").value);
-  const equity = Math.random()*20+35;
-
-  let verdict = equity > 40 ? "PUSH ✅" : "FOLD ❌";
-
-  document.getElementById("pfResult").innerHTML =
-    `Équité ≈ ${equity.toFixed(1)}%<br><b>${verdict}</b>`;
+  if (h && v) div.className = "cell both";
+  else if (h) div.className = "cell hero";
+  else if (v) div.className = "cell villain";
+  else div.className = "cell";
 }
 
-// ===== TRAINER =====
-
-let trainerAnswer = 0;
-
-function newQuiz() {
-  const hands = ["AKs vs QQ", "A8s vs 22+", "66 vs AK"];
-  trainerAnswer = Math.random()*25+35;
-
-  document.getElementById("quiz").innerHTML =
-    "Estime l’équité de : " + hands[Math.floor(Math.random()*hands.length)];
+function updateTextRanges() {
+  rangesDiv.innerHTML =
+    `<b>Hero :</b> ${[...heroRange].join(", ")}<br>
+     <b>Vilain :</b> ${[...villainRange].join(", ")}`;
 }
 
-function checkAnswer() {
-  const ans = parseFloat(document.getElementById("answer").value);
-  const diff = Math.abs(ans - trainerAnswer);
-
-  document.getElementById("trainerResult").innerHTML =
-    `Réponse ≈ ${trainerAnswer.toFixed(1)}%<br>Erreur : ${diff.toFixed(1)}%`;
-
-  newQuiz();
+function clearGrid() {
+  heroRange.clear();
+  villainRange.clear();
+  document.querySelectorAll(".cell").forEach(c => c.className = "cell");
+  updateTextRanges();
 }
 
-newQuiz();
+buildGrid();
