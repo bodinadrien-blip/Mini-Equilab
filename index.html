@@ -11,39 +11,28 @@
 <div class="app">
   <h2>♠ Mini Equilab MTT PRO</h2>
 
-  <!-- TABS -->
   <div class="tabs">
-    <button onclick="showTab('ranges')">Ranges</button>
     <button onclick="showTab('equity')">Equity</button>
     <button onclick="showTab('pushfold')">Push/Fold</button>
     <button onclick="showTab('trainer')">Trainer</button>
   </div>
 
-  <!-- RANGES -->
-  <div id="ranges" class="tab">
-    <div class="mode">
-      <button id="heroBtn" class="active" onclick="setMode('hero')">🟦 HERO</button>
-      <button id="villainBtn" onclick="setMode('villain')">🟥 VILAIN</button>
-    </div>
-
-    <div id="grid" class="grid"></div>
-
-    <button onclick="clearGrid()">Reset</button>
-
-    <div id="rangesText" class="result"></div>
-  </div>
-
   <!-- EQUITY -->
-  <div id="equity" class="tab hidden">
-    <input id="heroHand" placeholder="Hero : As Ks">
-    <button onclick="equityFromGrid()">Equité vs range Vilain</button>
-    <div id="equityResult" class="result"></div>
+  <div id="equity" class="tab">
+    <input id="hero" placeholder="Hero : As Ks">
+    <input id="villain" placeholder="Vilain RANGE : 22+,A2+,K9+,QTs+,JTs">
+    <input id="board" placeholder="Board : Qs 8d 3s">
+
+    <button onclick="calculateRange()">Calculer équité</button>
+    <div id="result" class="result"></div>
   </div>
 
   <!-- PUSH FOLD -->
   <div id="pushfold" class="tab hidden">
-    <input id="pfHand" placeholder="Main Hero : A8s">
+    <input id="pfHero" placeholder="Main Hero : A8s">
+    <input id="pfRange" placeholder="Call RANGE BB : 22+,A2+,K9+">
     <input id="stack" placeholder="Stack (bb) : 15">
+
     <button onclick="pushFold()">Analyser push</button>
     <div id="pfResult" class="result"></div>
   </div>
