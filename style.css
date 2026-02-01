@@ -17,6 +17,25 @@ body {
   text-align: center;
 }
 
+.tabs {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  background: #1e293b;
+  color: white;
+}
+
+.tab.hidden {
+  display: none;
+}
+
 .mode {
   display: flex;
   gap: 8px;
@@ -29,7 +48,6 @@ body {
   border: none;
   border-radius: 6px;
   font-weight: bold;
-  font-size: 14px;
 }
 
 #heroBtn { background: #2563eb; }
@@ -60,19 +78,23 @@ body {
   background: linear-gradient(90deg, #2563eb 50%, #dc2626 50%);
 }
 
-button {
+input, button {
   width: 100%;
-  margin-top: 10px;
+  margin: 6px 0;
   padding: 8px;
-  border: none;
   border-radius: 6px;
+  border: none;
+  font-size: 14px;
+}
+
+button {
   background: #22c55e;
   font-weight: bold;
 }
 
 .result {
-  margin-top: 10px;
-  font-size: 12px;
+  margin-top: 8px;
+  font-size: 13px;
   background: #020617;
   padding: 8px;
   border-radius: 6px;
