@@ -1,0 +1,50 @@
+body {
+  background: #020617;
+  font-family: Arial, sans-serif;
+  color: white;
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+  margin: 0;
+}
+
+.app {
+  width: 100%;
+  max-width: 420px;
+  background: #0f172a;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 15px;
+}
+
+input, button {
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+}
+
+input {
+  background: #1e293b;
+  color: white;
+}
+
+button {
+  background: #22c55e;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 15px;
+  font-size: 18px;
+  background: #020617;
+  padding: 12px;
+  border-radius: 8px;
+}
