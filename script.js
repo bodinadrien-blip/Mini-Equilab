@@ -126,3 +126,11 @@ function checkAnswer() {
 }
 
 newQuiz();
+
+const notesArea = document.getElementById("notes");
+
+notesArea.value = localStorage.getItem("miniEquilabNotes") || "";
+
+notesArea.addEventListener("input", () => {
+  localStorage.setItem("miniEquilabNotes", notesArea.value);
+});
