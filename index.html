@@ -2,25 +2,52 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Mini Equilab MTT</title>
+  <title>Mini Equilab MTT PRO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="app">
-    <h2>♠ Mini Equilab MTT</h2>
+<div class="app">
+  <h2>♠ Mini Equilab MTT PRO</h2>
 
+  <div class="tabs">
+    <button onclick="showTab('equity')">Equity</button>
+    <button onclick="showTab('pushfold')">Push/Fold</button>
+    <button onclick="showTab('trainer')">Trainer</button>
+  </div>
+
+  <!-- EQUITY -->
+  <div id="equity" class="tab">
     <input id="hero" placeholder="Hero : As Ks">
-    <input id="villain" placeholder="Vilain : Qh Qd">
+    <input id="villain" placeholder="Vilain RANGE : 22+,A2+,K9+,QTs+,JTs">
     <input id="board" placeholder="Board : Qs 8d 3s">
 
-    <button onclick="calculate()">Calculer</button>
-
+    <button onclick="calculateRange()">Calculer équité</button>
     <div id="result" class="result"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/pokersolver@2.1.3/pokersolver.min.js"></script>
-  <script src="script.js"></script>
+  <!-- PUSH FOLD -->
+  <div id="pushfold" class="tab hidden">
+    <input id="pfHero" placeholder="Main Hero : A8s">
+    <input id="pfRange" placeholder="Call RANGE BB : 22+,A2+,K9+">
+    <input id="stack" placeholder="Stack (bb) : 15">
+
+    <button onclick="pushFold()">Analyser push</button>
+    <div id="pfResult" class="result"></div>
+  </div>
+
+  <!-- TRAINER -->
+  <div id="trainer" class="tab hidden">
+    <p id="quiz"></p>
+    <input id="answer" placeholder="Ton estimation %">
+    <button onclick="checkAnswer()">Valider</button>
+    <div id="trainerResult" class="result"></div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pokersolver@2.1.3/pokersolver.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
