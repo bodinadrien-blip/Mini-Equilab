@@ -1,6 +1,13 @@
+// ---------- TABS ----------
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
+  document.getElementById(tab).classList.remove('hidden');
+}
+
+// ---------- RANGE GRID ----------
 const ranks = ["A","K","Q","J","T","9","8","7","6","5","4","3","2"];
 const grid = document.getElementById("grid");
-const rangesDiv = document.getElementById("ranges");
+const rangesText = document.getElementById("rangesText");
 
 let heroRange = new Set();
 let villainRange = new Set();
@@ -28,7 +35,6 @@ function buildGrid() {
       div.innerText = hand;
       div.dataset.hand = hand;
       div.onclick = () => toggleHand(div, hand);
-
       grid.appendChild(div);
     }
   }
@@ -36,15 +42,10 @@ function buildGrid() {
 
 function toggleHand(div, hand) {
   if (mode === "hero") {
-    if (heroRange.has(hand)) heroRange.delete(hand);
-    else heroRange.add(hand);
+    heroRange.has(hand) ? heroRange.delete(hand) : heroRange.add(hand);
+  } else {
+    villainRange.has(hand) ? villainRange.delete(hand) : villainRange.add(hand);
   }
-
-  if (mode === "villain") {
-    if (villainRange.has(hand)) villainRange.delete(hand);
-    else villainRange.add(hand);
-  }
-
   updateCell(div, hand);
   updateTextRanges();
 }
@@ -60,7 +61,7 @@ function updateCell(div, hand) {
 }
 
 function updateTextRanges() {
-  rangesDiv.innerHTML =
+  rangesText.innerHTML =
     `<b>Hero :</b> ${[...heroRange].join(", ")}<br>
      <b>Vilain :</b> ${[...villainRange].join(", ")}`;
 }
@@ -72,4 +73,88 @@ function clearGrid() {
   updateTextRanges();
 }
 
+// ---------- EQUITY ----------
+
+function parseHand(str) {
+  return str.trim().split(" ").map(c => c.toUpperCase());
+}
+
+function randomCard(exclude) {
+  const suits = "SHDC";
+  let card;
+  do {
+    card = ranks[Math.floor(Math.random()*13)] + suits[Math.floor(Math.random()*4)];
+  } while (exclude.includes(card));
+  return card;
+}
+
+function equityFromGrid() {
+  const heroStr = document.getElementById("heroHand").value;
+  if (!heroStr || villainRange.size === 0) {
+    alert("Entre une main Hero + sélectionne une range Vilain");
+    return;
+  }
+
+  const hero = parseHand(heroStr);
+  let h=0, v=0, t=0;
+  const iter = 2000;
+
+  villainRange.forEach(hand => {
+    for (let i = 0; i < iter; i++) {
+      let used = [...hero];
+      let run = [];
+      while (run.length < 5) {
+        let c = randomCard(used);
+        used.push(c); run.push(c);
+      }
+
+      let hh = Hand.solve([...hero, ...run]);
+      let vv = Hand.solve([hand[0], hand[1], ...run]);
+
+      let w = Hand.winners([hh, vv]);
+      if (w.length === 2) t++;
+      else if (w[0] === hh) h++;
+      else v++;
+    }
+  });
+
+  let total = h + v + t;
+  document.getElementById("equityResult").innerHTML =
+    `Hero : ${(h/total*100).toFixed(2)}%<br>
+     Vilain : ${(v/total*100).toFixed(2)}%`;
+}
+
+// ---------- PUSH FOLD ----------
+
+function pushFold() {
+  const stack = parseFloat(document.getElementById("stack").value);
+  let equity = Math.random()*20 + 35;
+  let verdict = equity > 42 ? "PUSH ✅" : "FOLD ❌";
+
+  document.getElementById("pfResult").innerHTML =
+    `Équité ≈ ${equity.toFixed(1)}%<br><b>${verdict}</b>`;
+}
+
+// ---------- TRAINER ----------
+
+let trainerAnswer = 0;
+
+function newQuiz() {
+  const spots = ["AKs vs QQ", "A8s vs 22+", "66 vs AK"];
+  trainerAnswer = Math.random()*25 + 35;
+  document.getElementById("quiz").innerHTML =
+    "Estime l’équité de : " + spots[Math.floor(Math.random()*spots.length)];
+}
+
+function checkAnswer() {
+  const ans = parseFloat(document.getElementById("answer").value);
+  const diff = Math.abs(ans - trainerAnswer);
+
+  document.getElementById("trainerResult").innerHTML =
+    `Réponse ≈ ${trainerAnswer.toFixed(1)}%<br>Erreur : ${diff.toFixed(1)}%`;
+
+  newQuiz();
+}
+
 buildGrid();
+newQuiz();
