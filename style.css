@@ -17,17 +17,28 @@ body {
   text-align: center;
 }
 
-h2 {
-  margin-bottom: 15px;
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.tabs button {
+  flex: 1;
+  background: #1e293b;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
 }
 
 input, button {
   width: 100%;
-  margin: 8px 0;
-  padding: 12px;
+  margin: 6px 0;
+  padding: 10px;
   border-radius: 6px;
   border: none;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 input {
@@ -38,13 +49,16 @@ input {
 button {
   background: #22c55e;
   font-weight: bold;
-  cursor: pointer;
 }
 
 .result {
-  margin-top: 15px;
-  font-size: 18px;
+  margin-top: 10px;
+  font-size: 16px;
   background: #020617;
-  padding: 12px;
+  padding: 10px;
   border-radius: 8px;
+}
+
+.hidden {
+  display: none;
 }
