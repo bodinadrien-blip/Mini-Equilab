@@ -1,11 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mini Equilab MTT</title>
+<style>
+body {
+  background: #020617;
+  font-family: Arial;
+  color: white;
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+}
+
+.app {
+  width: 100%;
+  max-width: 420px;
+  background: #0f172a;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+input, button {
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+}
+
+button {
+  background: #22c55e;
+  font-weight: bold;
+}
+
+.result {
+  margin-top: 15px;
+  font-size: 18px;
+  background: #020617;
+  padding: 12px;
+  border-radius: 8px;
+}
+</style>
+</head>
+
+<body>
 <div class="app">
-  <h1>♠ Mini Equilab MTT</h1>
+<h2>♠ Mini Equilab MTT</h2>
 
-  <input id="hero" placeholder="Hero : As Ks">
-  <input id="villain" placeholder="Vilain : Qh Qd">
-  <input id="board" placeholder="Board : Qs 8d 3s">
+<input id="hero" placeholder="Hero : As Ks">
+<input id="villain" placeholder="Vilain : Qh Qd">
+<input id="board" placeholder="Board : Qs 8d 3s">
 
-  <button onclick="calculate()">Calculer</button>
+<button onclick="calculate()">Calculer</button>
 
-  <div id="result"></div>
+<div id="result" class="result"></div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/pokersolver@2.1.3/pokersolver.min.js"></script>
+
+<script>
+function parseHand(str) {
+  return str.trim().split(" ").map(c => c.toUpperCase());
+}
+
+function randomCard(exclude) {
+  const ranks = "23456789TJQKA";
+  const suits = "SHDC";
+  let card;
+  do {
+    card = ranks[Math.floor(Math.random()*13)] + suits[Math.floor(Math.random()*4)];
+  } while (exclude.includes(card));
+  return card;
+}
+
+function calculate() {
+  const heroStr = document.getElementById("hero").value;
+  const villainStr = document.getElementById("villain").value;
+  const boardStr = document.getElementById("board").value;
+
+  if (!heroStr || !villainStr) return;
+
+  const hero = parseHand(heroStr);
+  const villain = parseHand(villainStr);
+  const board = boardStr ? parseHand(boardStr) : [];
+
+  let heroWins = 0, villainWins = 0, ties = 0;
+  const iterations = 15000;
+
+  for (let i = 0; i < iterations; i++) {
+    let used = [...hero, ...villain, ...board];
+    let runout = [...board];
+
+    while (runout.length < 5) {
+      runout.push(randomCard(used));
+      used.push(runout[runout.length - 1]);
+    }
+
+    const heroHand = Hand.solve([...hero, ...runout]);
+    const villainHand = Hand.solve([...villain, ...runout]);
+
+    const winner = Hand.winners([heroHand, villainHand]);
+
+    if (winner.length === 2) ties++;
+    else if (winner[0] === heroHand) heroWins++;
+    else villainWins++;
+  }
+
+  const total = heroWins + villainWins + ties;
+
+  document.getElementById("result").innerHTML = 
+    `Hero : ${(heroWins/total*100).toFixed(2)}%<br>
+     Vilain : ${(villainWins/total*100).toFixed(2)}%<br>
+     Split : ${(ties/total*100).toFixed(2)}%`;
+}
+</script>
+</body>
+</html>
