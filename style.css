@@ -4,7 +4,7 @@ body {
   color: white;
   display: flex;
   justify-content: center;
-  padding: 10px;
+  padding: 15px;
   margin: 0;
 }
 
@@ -12,79 +12,38 @@ body {
   width: 100%;
   max-width: 420px;
   background: #0f172a;
-  padding: 15px;
+  padding: 20px;
   border-radius: 12px;
   text-align: center;
 }
 
 .tabs {
   display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
+  gap: 6px;
+  margin-bottom: 12px;
 }
 
 .tabs button {
   flex: 1;
-  padding: 6px;
-  border: none;
-  border-radius: 6px;
   background: #1e293b;
   color: white;
-}
-
-.tab.hidden {
-  display: none;
-}
-
-.mode {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.mode button {
-  flex: 1;
-  padding: 8px;
   border: none;
+  padding: 8px;
   border-radius: 6px;
-  font-weight: bold;
-}
-
-#heroBtn { background: #2563eb; }
-#villainBtn { background: #dc2626; }
-
-.mode .active {
-  outline: 3px solid white;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(13, 1fr);
-  gap: 2px;
-}
-
-.cell {
-  background: #1e293b;
-  padding: 6px 0;
-  font-size: 11px;
-  border-radius: 4px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.cell.hero { background: #2563eb; }
-.cell.villain { background: #dc2626; }
-.cell.both {
-  background: linear-gradient(90deg, #2563eb 50%, #dc2626 50%);
 }
 
 input, button {
   width: 100%;
   margin: 6px 0;
-  padding: 8px;
+  padding: 10px;
   border-radius: 6px;
   border: none;
-  font-size: 14px;
+  font-size: 15px;
+}
+
+input {
+  background: #1e293b;
+  color: white;
 }
 
 button {
@@ -93,9 +52,13 @@ button {
 }
 
 .result {
-  margin-top: 8px;
-  font-size: 13px;
+  margin-top: 10px;
+  font-size: 16px;
   background: #020617;
-  padding: 8px;
-  border-radius: 6px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.hidden {
+  display: none;
 }
