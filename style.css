@@ -62,3 +62,27 @@ button {
 .hidden {
   display: none;
 }
+
+.notesBox {
+  margin-top: 12px;
+  background: #020617;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.notesBox h3 {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+}
+
+#notes {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  background: #0f172a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 13px;
+}
